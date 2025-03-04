@@ -197,7 +197,6 @@ class MultivariateDatasetBenchmark(Dataset):
         
         self.n_var = self.data_x.shape[-1]
         self.n_timepoint =  len(self.data_x) - self.seq_len - self.output_token_len + 1
-        print(self.n_var, self.n_timepoint)
 
     def __getitem__(self, index):
         s_begin = index

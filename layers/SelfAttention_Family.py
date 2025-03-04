@@ -140,3 +140,14 @@ class AttentionLayer(nn.Module):
 
         return self.out_projection(out), attn
 
+
+class TTMGatedAttention(nn.Module):
+    def __init__(self, in_size, out_size):
+        super().__init__()
+        self.attn_layer = nn.Linear(in_size, out_size)
+        self.attn_softmax = nn.Softmax(dim=-1)
+
+    def forward(self, inputs):
+        attn_weight = self.attn_softmax(self.attn_layer(inputs))
+        inputs = inputs * attn_weight
+        return inputs
