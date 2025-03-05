@@ -1,15 +1,16 @@
-from models import timer, timer_xl, moirai, moment, gpt4ts
+from models import timer, timer_xl, moirai, moment, gpt4ts, ttm
 
 
 class Exp_Basic(object):
     def __init__(self, args):
         self.args = args
         self.model_dict = {
-            'timer': timer,
-            'timer_xl': timer_xl,
-            'moirai': moirai,
-            'moment': moment,
-            'gpt4ts': gpt4ts
+            "timer": timer,
+            "timer_xl": timer_xl,
+            "moirai": moirai,
+            "moment": moment,
+            "gpt4ts": gpt4ts,
+            "ttm": ttm,
         }
         self.model = self._build_model()
 
