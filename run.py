@@ -15,6 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_id', type=str, required=True, default='test', help='model id')
     parser.add_argument('--model', type=str, required=True, default='timer_xl', help='model name, options: [timer_xl, timer, moirai, moment]')
     parser.add_argument('--seed', type=int, default=2021, help='seed')
+    parser.add_argument('--model_name', type=str, default='LLaMa', help='model name')
     
     # data loader
     parser.add_argument('--data', type=str, required=True, default='ETTh1', help='dataset type')
@@ -22,6 +23,10 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, default='ETTh1.csv', help='data file')
     parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
     parser.add_argument('--test_flag', type=str, default='T', help='test domain')
+    parser.add_argument('--test_data_path', type=str, default='ETTh1.csv', help='test data file used in zero shot forecasting')
+    parser.add_argument('--drop_last',  action='store_true', default=False, help='drop last batch in data loader')
+    parser.add_argument('--val_set_shuffle', action='store_false', default=True, help='shuffle validation set')
+    parser.add_argument('--drop_short', action='store_true', default=False, help='drop too short sequences in dataset')
 
     # forecasting task
     parser.add_argument('--seq_len', type=int, default=672, help='input sequence length')
@@ -29,6 +34,10 @@ if __name__ == '__main__':
     parser.add_argument('--output_token_len', type=int, default=96, help='output token length')
     parser.add_argument('--test_seq_len', type=int, default=672, help='test seq len')
     parser.add_argument('--test_pred_len', type=int, default=96, help='test pred len')
+    parser.add_argument('--label_len', type=int, default=576, help='label length')
+    parser.add_argument('--token_len', type=int, default=96, help='token length')
+    parser.add_argument('--test_label_len', type=int, default=576, help='test label len')
+    parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
 
     # model define
     parser.add_argument('--dropout', type=float, default=0.1, help='dropout')
@@ -47,6 +56,10 @@ if __name__ == '__main__':
     parser.add_argument('--output_attention', action='store_true', help='output attention', default=False)
     parser.add_argument('--visualize', action='store_true', help='visualize', default=False)
     parser.add_argument('--flash_attention', action='store_true', help='flash attention', default=False)
+    parser.add_argument('--llm_ckp_dir', type=str, default='./llama', help='llm checkpoints dir')
+    parser.add_argument('--mlp_hidden_dim', type=int, default=256, help='mlp hidden dim')
+    parser.add_argument('--mlp_hidden_layers', type=int, default=2, help='mlp hidden layers')
+    parser.add_argument('--mlp_activation', type=str, default='tanh', help='mlp activation')
 
     # adaptation
     parser.add_argument('--adaptation', action='store_true', help='adaptation', default=False)
@@ -68,13 +81,17 @@ if __name__ == '__main__':
     parser.add_argument('--weight_decay', type=float, default=0)
     parser.add_argument('--valid_last', action='store_true', help='valid last', default=False)
     parser.add_argument('--last_token', action='store_true', help='last token', default=False)
+    parser.add_argument('--test_dir', type=str, default='./test', help='test dir')
+    parser.add_argument('--test_file_name', type=str, default='checkpoint.pth', help='test file')
     
     # GPU
     parser.add_argument('--gpu', type=int, default=0, help='gpu')
     parser.add_argument('--ddp', action='store_true', help='Distributed Data Parallel', default=False)
     parser.add_argument('--dp', action='store_true', help='Data Parallel', default=False)
     parser.add_argument('--devices', type=str, default='0,1,2,3', help='device ids of multile gpus')    
-    
+    parser.add_argument('--use_multi_gpu', action='store_true', help='use multiple gpus', default=False)
+    parser.add_argument('--visualize', action='store_true', help='visualize', default=False)
+
     # LLM-based model
     parser.add_argument('--gpt_layers', type=int, default=6)
     parser.add_argument('--patch_size', type=int, default=16)
