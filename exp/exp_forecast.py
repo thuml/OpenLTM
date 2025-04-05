@@ -216,7 +216,13 @@ class Exp_Forecast(Exp_Basic):
             setting = self.args.test_dir
             best_model_path = self.args.test_file_name
             print("loading model from {}".format(os.path.join(self.args.checkpoints, setting, best_model_path)))
-            self.model.load_state_dict(torch.load(os.path.join(self.args.checkpoints, setting, best_model_path)))
+            
+            checkpoint = torch.load(os.path.join(self.args.checkpoints, setting, best_model_path))
+            for name, param in self.model.named_parameters():
+                if not param.requires_grad and name not in checkpoint:
+                    checkpoint[name] = param
+            self.model.load_state_dict(checkpoint)
+            
         preds = []
         trues = []
         folder_path = './test_results/' + setting + '/'

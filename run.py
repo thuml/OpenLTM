@@ -22,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, default='ETTh1.csv', help='data file')
     parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
     parser.add_argument('--test_flag', type=str, default='T', help='test domain')
+    parser.add_argument('--load_time_stamp', type=str, default='none', help='type of load time stamp')
 
     # forecasting task
     parser.add_argument('--seq_len', type=int, default=672, help='input sequence length')
@@ -94,8 +95,14 @@ if __name__ == '__main__':
     # Time-LLM
     parser.add_argument("--ts_vocab_size", type=int, default=1000, help="size of a small collection of text prototypes in llm")
     parser.add_argument("--domain_des", type=str, default="The Electricity Transformer Temperature (ETT) is a crucial indicator in the electric power long-term deployment.", help="domain description")
-    parser.add_argument("--llm_model", type=str, default="LLAMA", help="LLM model, LLAMA, GPT2, BERT are supported") 
+    # @llm_model: 
+    # for Time-LLM: Currently, LLAMA, GPT2, and BERT are supported.
+    # for AutoTimes: Currently, LLAMA, GPT2, and OPT are supported.
+    parser.add_argument("--llm_model", type=str, default="LLAMA", help="LLM model, LLAMA, GPT2, BERT, OPT are supported") 
     parser.add_argument("--llm_layers", type=int, default=6, help="number of layers in llm")
+    
+    # AutoTimes
+    parser.add_argument("--mix_embeds", action="store_true", help="load time stamp embedding from file, mix time series and textual embeddings of time stamp", default=False)
     
     args = parser.parse_args()
     fix_seed = args.seed
